@@ -1,0 +1,19 @@
+{% block content %}
+  <h2>{{course.subject+course.catalog_number}}</h2>
+  <h3>{{course.title}}</h3>
+
+  <br><br>
+
+  <p> {{course.description}} </p>
+
+  <table>
+  	<tr>
+  		<th>Section</th>
+  		<th>Class</th>
+  		<th>Campus</th>
+  		<th>Enrolled</th>
+  		<th>Location</th>
+  		<th>Instructors</th>
+  	</tr>
+  </table>
+{% endblock %}

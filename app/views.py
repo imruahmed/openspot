@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, session, url_for
 from app import app, db
 
-from models import User
+from models import User, Course
 from forms import SignupForm, SigninForm
 
 @app.route('/')
@@ -69,3 +69,11 @@ def profile():
   else:
     return render_template('profile.html')
 
+@app.route('/courses')
+def courses():
+    return render_template('courses.html', courses=Course.query.all())
+
+@app.route('/course/<course_id>')
+def course(course_id):
+  course = Course.query.filter_by(course_id=course_id).first();
+  return render_template('course.html', course=course)

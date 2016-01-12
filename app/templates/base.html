@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Flask App</title>
+    <title>OpenSpot</title>
   </head>
   <body>
  
   <header>
     <div class="container">
-      <h1 class="logo">Flask App</h1>
+      <h1 class="logo">OpenSpot</h1>
       <nav>
         <ul class="menu">
           <li><a href="{{ url_for('index') }}">Home</a></li>
           {% if 'email' in session %}
+          <li><a href="{{ url_for('courses') }}">Courses</a></li>
           <li><a href="{{ url_for('profile') }}">Profile</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
           {% else %}
