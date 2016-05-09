@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ user.firstname }}</h2>
+
+  <ul>
+      {% for course in user.followed %}
+        <li>{{ course.class_number }}</li>
+      {% endfor %}
+  </ul>
+
+{% endblock %}

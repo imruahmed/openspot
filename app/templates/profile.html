@@ -4,5 +4,12 @@
   <div class="jumbo">
     <h2>Profile<h2>
     <h3>This is {{ session['email'] }}'s profile page<h3>
+    <h4>This is {{ user.firstname }}
+    <ul>
+      {% for class in user.followed %}
+        <li>{{ class.class_number }}</li>
+      {% endfor %}
+  </ul>
   </div>
+
 {% endblock %}

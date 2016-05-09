@@ -15,5 +15,15 @@
   		<th>Location</th>
   		<th>Instructors</th>
   	</tr>
+    {% for s in course.classes %}
+        <tr>
+          <td>{{s.section}}</td>
+          <td>{{s.class_id}}</td> 
+          <td>{{s.campus}}</td>
+          <td>{{s.enroll_tot}}</td>
+          <td>{{s.campus}}</td>
+          <td>{{s.campus}}</td>
+        </tr>
+    {% endfor %}
   </table>
 {% endblock %}

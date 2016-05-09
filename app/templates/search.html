@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ course['subject']+course['catalog_number'] }}</h2>
+  <h3>{{ course['title'] }}</h3>
+
+  <br><br>
+
+  <p> {{ course['description'] }} </p>
+
+  <table>
+  	<tr>
+  		<th>Section</th>
+  		<th>Class</th>
+  		<th>Campus</th>
+  		<th>Enrolled</th>
+  		<th>Location</th>
+  		<th>Instructors</th>
+      <th>Follow</th>
+  	</tr>
+    {% for s in sched %}
+        <tr>
+          <td>{{ s['section'] }}</td>
+          <td>{{ s['class_number'] }}</td> 
+          <td>{{ s['campus'] }}</td>
+          <td>{{ s['enrollment_total'] }}</td>
+          <td>{{ s['enrollment_capacity'] }}</td>
+          <td>{{ s['units'] }}</td>
+          <td>
+            {% if s['class_number'] in stuff %}
+              <a href="{{ url_for('unfollow', cn=s['class_number'], et=s['enrollment_total'], ec=s['enrollment_capacity']) }}">Unfollow</a>
+            {% else %}
+              <a href="{{ url_for('follow', cn=s['class_number'], et=s['enrollment_total'], ec=s['enrollment_capacity']) }}">Follow</a>
+            {% endif %}
+          </td>
+        </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

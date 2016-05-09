@@ -1,7 +1,7 @@
-from flask import render_template, request, redirect, session, url_for
-from app import app, db
+from flask import render_template, request, redirect, session, url_for, flash
+from app import app, db, uw
 
-from models import User, Course
+from models import User, Course, Schedule
 from forms import SignupForm, SigninForm
 
 @app.route('/')
@@ -67,13 +67,71 @@ def profile():
   if user is None:
     return redirect(url_for('signin'))
   else:
-    return render_template('profile.html')
+    return render_template('profile.html', user=user)
 
 @app.route('/courses')
 def courses():
     return render_template('courses.html', courses=Course.query.all())
 
-@app.route('/course/<course_id>')
+@app.route('/courses/<course_id>')
 def course(course_id):
   course = Course.query.filter_by(course_id=course_id).first();
   return render_template('course.html', course=course)
+
+@app.route('/search/<subject>/<catalog_number>')
+def search(subject, catalog_number):
+  if 'email' not in session:
+    return redirect(url_for('signin')) 
+
+  user = User.query.filter_by(email = session['email']).first()
+
+  if user is None:
+    return redirect(url_for('signin'))
+
+  stuff = [i.class_number for i in user.followed]
+  course = uw.course(subject, catalog_number)
+  sched = uw.course_schedule(subject, catalog_number)
+  return render_template('search.html', stuff=stuff, course=course, sched=sched)
+
+@app.route('/search/followed/<cn>/<et>/<ec>')
+def follow(cn, et, ec):
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+
+  user = User.query.filter_by(email = session['email']).first()
+
+  if user is None:
+    return redirect(url_for('signin'))
+
+  if Schedule.query.filter_by(class_number=cn).first() is None:
+    s = Schedule(class_number=cn, enrollment_total=et, enrollment_capacity=ec)
+  else:
+    s = Schedule.query.filter_by(class_number=cn).first() 
+
+  user.followed.append(s)
+  db.session.commit()
+    
+  return redirect(url_for('profile'))
+
+@app.route('/search/unfollowed/<cn>/<et>/<ec>')
+def unfollow(cn, et, ec):
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+
+  user = User.query.filter_by(email = session['email']).first()
+
+  if user is None:
+    return redirect(url_for('signin'))
+
+  if Schedule.query.filter_by(class_number=cn).first() is None:
+    return redirect(url_for('profile'))
+  else:
+    s = Schedule.query.filter_by(class_number=cn).first() 
+
+  user.followed.remove(s)
+  db.session.delete(s)
+  db.session.commit()
+    
+  return redirect(url_for('profile'))
+
+
